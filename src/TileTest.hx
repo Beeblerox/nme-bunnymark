@@ -60,7 +60,7 @@ class TileTest extends Sprite
 		
 		gravity = 0.5;
 		incBunnies = 100;
-		#if flash
+		#if (flash || js)
 		smooth = false;
 		numBunnies = 100;
 		Lib.current.stage.quality = StageQuality.LOW;

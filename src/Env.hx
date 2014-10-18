@@ -23,7 +23,7 @@ class Env
 		stage.align = StageAlign.TOP_LEFT;
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.addEventListener(Event.RESIZE, stage_resize);
-		#if !flash
+		#if !(flash || js)
 		dpi = stage.dpiScale;
 		#else
 		dpi = 1;
