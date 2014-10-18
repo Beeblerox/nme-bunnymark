@@ -56,7 +56,7 @@ class TileTest extends Sprite
 		super ();
 		
 		drawTilesFlag = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA;
-		drawRectsFlag = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RECT;
+		drawRectsFlag = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RECT | Tilesheet.TILE_ORIGIN;
 		
 		gravity = 0.5;
 		incBunnies = 100;
@@ -70,7 +70,11 @@ class TileTest extends Sprite
 		#end
 
 		bunnyAsset = Assets.getBitmapData("assets/wabbit_alpha.png");
+		#if !flash
 		pirate = new Bitmap(Assets.getBitmapData("assets/pirate.png"), null, true);
+		#else
+		pirate = new Bitmap(Assets.getBitmapData("assets/pirate.png"));
+		#end
 		pirate.scaleX = pirate.scaleY = Env.height / 768;
 		addChild(pirate);
 		
@@ -177,7 +181,7 @@ class TileTest extends Sprite
 	{	
 		graphics.clear ();
 		
-		var TILE_FIELDS = useRects ? 11 : 6; // x+y+index+scale+rotation+alpha
+		var TILE_FIELDS = useRects ? 11 : 6;
 		var bunny;
 	 	for (i in 0...numBunnies)
 		{
@@ -236,7 +240,7 @@ class TileTest extends Sprite
 		
 		var drawFlag:Int = useRects ? drawRectsFlag : drawTilesFlag;
 		
-		tilesheet.drawTiles(graphics, drawList, smooth, drawFlag, numBunnies);
+		tilesheet.drawTiles(graphics, drawList, smooth, drawFlag, numBunnies * TILE_FIELDS);
 
 		var t = Lib.getTimer();
 		pirate.x = Std.int((Env.width - pirate.width) * (0.5 + 0.5 * Math.sin(t / 3000)));

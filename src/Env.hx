@@ -23,8 +23,11 @@ class Env
 		stage.align = StageAlign.TOP_LEFT;
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.addEventListener(Event.RESIZE, stage_resize);
-
+		#if !flash
 		dpi = stage.dpiScale;
+		#else
+		dpi = 1;
+		#end
 		Lib.current.scaleX = Lib.current.scaleY = dpi;
 		stage_resize(null);
 	}
