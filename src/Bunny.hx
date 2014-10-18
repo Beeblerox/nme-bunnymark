@@ -1,6 +1,6 @@
 package ;
 
-import nme.geom.Point;
+import openfl.geom.Point;
 
 /**
  * ...

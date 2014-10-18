@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+  <app file="BunnyMark" title="BunnyMark" main="BunnyMark" package="aze.nme.bunnymark" version="1.0.0" company="NME" />
+  
+  <window width="480" height="640" fps="60" resizable="true" />
+  <window width="0" height="0" orientation="portrait" if="fullscreen" />
+
+  <set name="BUILD_DIR" value="bin" />
+
+  <classpath name="src" />
+
+  <haxelib name="openfl" />
+
+  <assets path="assets" include="*" />
+
+</project>

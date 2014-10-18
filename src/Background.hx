@@ -1,10 +1,10 @@
 package ;
 
-import nme.display.BitmapData;
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.Lib;
-import nme.Vector;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.Lib;
+import openfl.Vector;
 
 /**
  * ...

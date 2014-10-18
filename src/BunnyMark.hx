@@ -1,10 +1,10 @@
 ﻿package;
 
-import nme.Assets;
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.events.MouseEvent;
-import nme.Lib;
+import openfl.Assets;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.Lib;
 
 /**
  * @author Joshua Granick

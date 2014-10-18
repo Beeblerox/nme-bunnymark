@@ -1,22 +1,25 @@
 package ;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.Graphics;
-import nme.display.Sprite;
-import nme.display.StageQuality;
-import nme.display.Tilesheet;
-import nme.display.BlendMode;
-import nme.events.Event;
-import nme.events.MouseEvent;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.Assets;
-import nme.Lib;
-import nme.text.TextField;
-import nme.text.TextFieldAutoSize;
-import nme.text.TextFormat;
-import nme.text.TextFormatAlign;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
+import openfl.display.StageQuality;
+import openfl.display.Tilesheet;
+import openfl.display.BlendMode;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.KeyboardEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import openfl.Assets;
+import openfl.Lib;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
+
+import openfl.ui.Keyboard;
 
 /**
  * @author Joshua Granick
@@ -39,10 +42,22 @@ class TileTest extends Sprite
 	var tilesheet:Tilesheet;
 	var drawList:Array<Float>;
 	
+	var drawTilesFlag:Int;
+	var drawRectsFlag:Int;
+	var bunnyRect:Rectangle;
+	var bunnyOrigin:Point;
+	var bunnyId:Int;
+	
+	var useRects:Bool = true;
+	var tfTileMode:TextField;
+	
 	public function new() 
 	{
 		super ();
-
+		
+		drawTilesFlag = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA;
+		drawRectsFlag = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RECT;
+		
 		gravity = 0.5;
 		incBunnies = 100;
 		#if flash
@@ -61,9 +76,12 @@ class TileTest extends Sprite
 		
 		bunnies = new Array<Bunny>();
 		drawList = new Array<Float>();
+		
+		bunnyRect = new Rectangle(0, 0, bunnyAsset.width, bunnyAsset.height);
+		bunnyOrigin = new Point(0.5 * bunnyRect.width, 0.5 * bunnyRect.height);
+		
 		tilesheet = new Tilesheet(bunnyAsset);
-		tilesheet.addTileRect(
-			new Rectangle (0, 0, bunnyAsset.width, bunnyAsset.height));
+		bunnyId = tilesheet.addTileRect(bunnyRect, bunnyOrigin);
 		
 		var bunny; 
 		for (i in 0...numBunnies) 
@@ -81,6 +99,7 @@ class TileTest extends Sprite
 		
 		addEventListener(Event.ENTER_FRAME, enterFrame);
 		Lib.current.stage.addEventListener(Event.RESIZE, stage_resize);
+		
 		stage_resize(null);
 	}
 
@@ -99,6 +118,28 @@ class TileTest extends Sprite
 		addChild(tf);
 
 		tf.addEventListener(MouseEvent.CLICK, counter_click);
+		
+		format = new TextFormat("_sans", 20, 0, true);
+		format.align = TextFormatAlign.CENTER;
+		
+		tfTileMode = new TextField();
+		tfTileMode.selectable = false;
+		tfTileMode.defaultTextFormat = format;
+		tfTileMode.width = 200;
+		tfTileMode.height = 150;
+		tfTileMode.wordWrap = true;
+		tfTileMode.x = 0.5 * (maxX - tfTileMode.width);
+		tfTileMode.y = 10;
+		tfTileMode.text = "Use rects: " + useRects + "\nClick HERE to switch mode";
+		addChild(tfTileMode);
+		
+		tfTileMode.addEventListener(MouseEvent.CLICK, tileModeClick);
+	}
+	
+	private function tileModeClick(e:Event):Void 
+	{
+		useRects = !useRects;
+		tfTileMode.text = "Use rects: " + useRects + "\nClick HERE to switch mode";
 	}
 
 	function counter_click(e)
@@ -128,13 +169,15 @@ class TileTest extends Sprite
 		maxY = Env.height;
 		tf.text = "Bunnies:\n" + numBunnies;
 		tf.x = maxX - tf.width - 10;
+		
+		tfTileMode.x = 0.5 * (maxX - tfTileMode.width);
 	}
 	
 	function enterFrame(e) 
 	{	
 		graphics.clear ();
-
-		var TILE_FIELDS = 6; // x+y+index+scale+rotation+alpha
+		
+		var TILE_FIELDS = useRects ? 11 : 6; // x+y+index+scale+rotation+alpha
 		var bunny;
 	 	for (i in 0...numBunnies)
 		{
@@ -167,16 +210,33 @@ class TileTest extends Sprite
 			}
 			
 			var index = i * TILE_FIELDS;
-			drawList[index] = bunny.position.x;
-			drawList[index + 1] = bunny.position.y;
-			//drawList[index + 2] = 0; // sprite index
-			drawList[index + 3] = bunny.scale;
-			drawList[index + 4] = bunny.rotation;
-			drawList[index + 5] = bunny.alpha;
+			drawList[index++] = bunny.position.x;
+			drawList[index++] = bunny.position.y;
+			
+			if (useRects)
+			{
+				// tile rect from texture
+				drawList[index++] = bunnyRect.x;
+				drawList[index++] = bunnyRect.y;
+				drawList[index++] = bunnyRect.width;
+				drawList[index++] = bunnyRect.height;
+				// tile origin
+				drawList[index++] = bunnyOrigin.x;
+				drawList[index++] = bunnyOrigin.y;
+			}
+			else
+			{
+				drawList[index++] = bunnyId; // sprite index
+			}
+			
+			drawList[index++] = bunny.scale;
+			drawList[index++] = bunny.rotation;
+			drawList[index++] = bunny.alpha;
 		}
 		
-		tilesheet.drawTiles(graphics, drawList, smooth, 
-			Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA);
+		var drawFlag:Int = useRects ? drawRectsFlag : drawTilesFlag;
+		
+		tilesheet.drawTiles(graphics, drawList, smooth, drawFlag, numBunnies);
 
 		var t = Lib.getTimer();
 		pirate.x = Std.int((Env.width - pirate.width) * (0.5 + 0.5 * Math.sin(t / 3000)));

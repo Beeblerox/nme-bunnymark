@@ -1,10 +1,10 @@
 package ;
 
-import nme.display.DisplayObject;
-import nme.display.StageAlign;
-import nme.display.StageScaleMode;
-import nme.events.Event;
-import nme.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.StageAlign;
+import openfl.display.StageScaleMode;
+import openfl.events.Event;
+import openfl.Lib;
 
 /**
  * Stage size, taking into account retina scale

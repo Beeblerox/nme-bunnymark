@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="build.nmml" />
+    <movie path="build.xml" />
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
@@ -15,19 +15,24 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
+    <class path="c:\HaxeToolkit\haxe\lib\openfl\2,1,1" />
+    <class path="C:\Development\lime\lime" />
     <class path="src" />
+    <class path="C:\Development\lime\lime\legacy" />
+    <class path="bin\windows\cpp\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="" />
+    <option directives="openfl=2.1.1&#xA;lime=2.0.0-alpha.2&#xA;tools=2.0.0-alpha.2&#xA;lime-legacy&#xA;no-compilation&#xA;native&#xA;lime-native&#xA;openfl-native&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
-    <option mainClass="BunnyMark" />
+    <option noInlineOnDebug="False" />
+    <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="" />
+    <option additional="--remap flash:openfl&#xA;#--macro keep(&quot;BunnyMark&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="nme" />
+    <!-- example: <library name="..." /> -->
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
@@ -39,7 +44,7 @@
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
@@ -49,7 +54,7 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="cpp" />
+    <option testMovieCommand="" />
   </options>
   <!-- Plugin storage -->
   <storage />
